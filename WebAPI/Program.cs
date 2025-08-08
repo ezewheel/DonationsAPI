@@ -1,3 +1,6 @@
+using Domain.Interfaces;
+using Infrastructure.Repository;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,6 +18,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 app.UseHttpsRedirection();
 
