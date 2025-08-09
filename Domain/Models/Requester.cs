@@ -1,15 +1,10 @@
-﻿using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Enums;
 
 namespace Domain.Models
 {
     public class Requester : User
     {
         public required string OrganizationName { get; set; }
+        public Status CurrentStatus { get; set; } = Status.Pending;
     }
 }

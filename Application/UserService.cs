@@ -55,7 +55,7 @@ namespace Application
             if (exists != null)
                 throw new Exception("User already exists.");
 
-            var requester = new Requester
+            Requester requester = new Requester
             {
                 Username = requesterForCreation.Username,
                 Password = requesterForCreation.Password,
