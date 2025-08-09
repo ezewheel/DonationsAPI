@@ -21,6 +21,11 @@ namespace Infrastructure.Repository
             return _donationsContext.Users.FirstOrDefault(u => u.Id == id && u.AccountStatus == true);
         }
 
+        public User? GetByUsername(string username)
+        {
+            return _donationsContext.Users.FirstOrDefault(u => u.Username == username);
+        }
+
         public List<Donator> GetDonators()
         {
             return _donationsContext.Users.OfType<Donator>().Where(d => d.AccountStatus == true).ToList();

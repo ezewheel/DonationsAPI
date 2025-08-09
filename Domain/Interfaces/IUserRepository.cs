@@ -6,6 +6,7 @@ namespace Domain.Interfaces
     {
         List<User> GetAll();
         User? GetById(int id);
+        User? GetByUsername(string username);
         List<Donator> GetDonators();
         List<Requester> GetRequesters();
         void AddUser(Donator donator);
