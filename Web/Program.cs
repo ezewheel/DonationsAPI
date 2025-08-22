@@ -1,11 +1,3 @@
-using Application;
-using Application.Interfaces;
-using Domain.Interfaces.Repositories;
-using Domain.Models;
-using Infrastructure;
-using Infrastructure.Repositories.UserRepositories;
-using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,12 +6,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserRepository<User>, UserRepository<User>>();
-
-builder.Services.AddDbContext<DonationsDbContext>(options =>
-    options.UseNpgsql(builder.Configuration["ConnectionStrings:DbConnectionString"]));
 
 var app = builder.Build();
 

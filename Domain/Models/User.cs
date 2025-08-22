@@ -1,5 +1,4 @@
-﻿using Domain.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Models
@@ -9,10 +8,10 @@ namespace Domain.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public required string Username { get; set; }
-        public string? Password { get; set; }
+        public required string Name { get; set; }
         public required string Email { get; set; }
-        public required Role Role { get; set; }
-        public bool AccountStatus { get; set; } = true;
+        public required string Password { get; set; }
+        public required int RoleId { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }
