@@ -18,20 +18,25 @@ namespace WebAPI.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<ResponseDto<string>>> Login([FromBody] LoginRequestDto request)
         {
-            string token = await _authService.LoginAsync(request);
-            ResponseDto<string> response = new ResponseDto<string>();
-            if (token == null)
+            try
             {
-                response.Status = 401;
-                response.Message = "failed";
-                response.Data = null;
-                return Unauthorized(response);
+                string token = await _authService.LoginAsync(request);
+                return Ok(new ResponseDto<string>
+                {
+                    Status = 200,
+                    Message = "Success",
+                    Data = token
+                });
             }
-
-            response.Status = 200;
-            response.Message = "success";
-            response.Data = token;
-            return Ok(response);
+            catch (UnauthorizedAccessException exception)
+            {
+                return Unauthorized(new ResponseDto<string>
+                {
+                    Status = 401,
+                    Message = exception.Message,
+                    Data = null
+                });
+            }
         }
 
         [HttpPost("register")]

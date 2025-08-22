@@ -14,7 +14,9 @@ namespace Infrastructure.Repositories.UserRepositories
 
         public async Task<T?> GetAsync(string email)
         {
-            return await _dbContext.Set<T>().FirstOrDefaultAsync(u => u.Email == email);
+            return await _dbContext.Set<T>()
+                .Include(u  => u.Role)
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

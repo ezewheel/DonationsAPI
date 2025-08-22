@@ -25,7 +25,7 @@ namespace Infrastructure
                 Name = "admin",
                 Email = "admin",
                 Password = BCrypt.Net.BCrypt.HashPassword("admin"),
-                RoleId = 1
+                RoleId = adminRole.Id
             };
 
             modelBuilder.Entity<Role>().HasData(adminRole);

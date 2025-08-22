@@ -3,8 +3,12 @@ using Application.Interfaces;
 using Domain.Interfaces.Repositories;
 using Domain.Models;
 using Infrastructure;
+using Infrastructure.Repositories;
 using Infrastructure.Repositories.UserRepositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +21,48 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository<User>, UserRepository<User>>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 builder.Services.AddDbContext<DonationsDbContext>(options =>
     options.UseNpgsql(builder.Configuration["ConnectionStrings:DbConnectionString"]));
+
+builder.Services.AddSwaggerGen(setupAction =>
+{
+    setupAction.AddSecurityDefinition("DonationsAPI", new OpenApiSecurityScheme()
+    {
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        Description = "Acá pegar el token generado al loguearse."
+    });
+
+    setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "DonationsAPI" }
+                }, new List<string>() }
+    });
+});
+
+
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Authentication:Issuer"],
+            ValidAudience = builder.Configuration["Authentication:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["Authentication:SecretForKey"]!))
+        };
+    }
+);
 
 var app = builder.Build();
 
