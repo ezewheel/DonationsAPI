@@ -1,6 +1,7 @@
 ﻿using Application.Models.Requests;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Application.Models;
 
 namespace WebAPI.Controllers
 {
@@ -14,10 +15,29 @@ namespace WebAPI.Controllers
             _authService = authService;
         }
 
-        [HttpGet]
-        public async Task<string> Login(LoginRequestDto request)
+        [HttpPost("login")]
+        public async Task<ActionResult<ResponseDto<string>>> Login([FromBody] LoginRequestDto request)
         {
-            return await _authService.LoginAsync(request);
+            string token = await _authService.LoginAsync(request);
+            ResponseDto<string> response = new ResponseDto<string>();
+            if (token == null)
+            {
+                response.Status = 401;
+                response.Message = "failed";
+                response.Data = null;
+                return Unauthorized(response);
+            }
+
+            response.Status = 200;
+            response.Message = "success";
+            response.Data = token;
+            return Ok(response);
+        }
+
+        [HttpPost("register")]
+        public async Task<string> Register(RegistrationRequestDto request)
+        {
+            return await _authService.RegisterAsync(request);
         }
     }
 }

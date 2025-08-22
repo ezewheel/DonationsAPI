@@ -15,17 +15,20 @@ namespace Infrastructure
             Role adminRole = new Role()
             {
                 Id = 1,
-                Description = "Admin"
+                Name = "admin",
+                Description = "System administrator"
             };
 
             User admin = new User()
             {
                 Id = 1,
                 Name = "admin",
-                Email = "admin@admin.com",
-                Password = "admin",
+                Email = "admin",
+                Password = BCrypt.Net.BCrypt.HashPassword("admin"),
                 RoleId = 1
             };
+
+            modelBuilder.Entity<Role>().HasData(adminRole);
 
             modelBuilder.Entity<User>().HasData(admin);
 
