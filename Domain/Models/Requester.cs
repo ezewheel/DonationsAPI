@@ -3,6 +3,6 @@
     public class Requester : User
     {
         public required string OrganizationName { get; set; }
-        //public Status CurrentStatus { get; set; } = Status.Pending;
+        public required Status CurrentStatus { get; set; }
     }
 }

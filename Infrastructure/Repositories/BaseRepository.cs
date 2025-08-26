@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Repository
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         public readonly DonationsDbContext _dbContext;
 
