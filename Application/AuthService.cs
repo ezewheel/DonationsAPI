@@ -46,7 +46,6 @@ namespace Application
         public async Task<string> LoginAsync(LoginRequestDto request)
         {
             User? user = await _userRepository.GetAsync(request.Email);
-            var pass = user?.Password;
             if (user != null && BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 return GenerateJwtToken(user);
@@ -59,25 +58,25 @@ namespace Application
         {
             if (await _userRepository.GetAsync(request.Email) != null)
             {
-                return "User already exists";
+                throw new InvalidOperationException("User already exists.");
             }
 
             Role? role = await _roleRepository.GetAsync(request.Role);
             if (role == null)
             {
-                return "Invalid role";
+                throw new InvalidOperationException("Invalid role.");
             }
 
             User user = new User
             {
                 Name = request.Name,
                 Email = request.Email,
-                Password = request.Password,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 RoleId = role.Id,
                 Role = role
             };
             await _userRepository.AddAsync(user);
-            return "Registration successful";
+            return GenerateJwtToken(user);
         }
     }
 }
