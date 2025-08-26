@@ -14,13 +14,11 @@ namespace Application
     {
         private readonly IConfiguration _config;
         private readonly IUserRepository<User> _userRepository;
-        private readonly IRoleRepository _roleRepository;
 
-        public AuthService(IConfiguration config, IUserRepository<User> userRepository, IRoleRepository roleRepository)
+        public AuthService(IConfiguration config, IUserRepository<User> userRepository)
         {
             _config = config;
             _userRepository = userRepository;
-            _roleRepository = roleRepository;
         }
 
         private string GenerateJwtToken(User user)
@@ -30,7 +28,6 @@ namespace Application
             SigningCredentials signature = new SigningCredentials(securityPassword, SecurityAlgorithms.HmacSha256);
 
             var claimsForToken = new List<Claim>();
-            claimsForToken.Add(new Claim(ClaimTypes.Role, user.Role.Name));
 
             var jwtSecurityToken = new JwtSecurityToken(
                 _config["Authentication:Issuer"],
@@ -46,34 +43,48 @@ namespace Application
         public async Task<string> LoginAsync(LoginRequestDto request)
         {
             User? user = await _userRepository.GetAsync(request.Email);
-            if (user != null && BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (user == null ||
+                !BCrypt.Net.BCrypt.Verify(request.Password, user.Password) ||
+                (user is Requester requester && requester.CurrentStatus != Status.Accepted))
             {
-                return GenerateJwtToken(user);
+                throw new UnauthorizedAccessException("Invalid email or password.");
             }
 
-            throw new UnauthorizedAccessException("Invalid email or password.");
+            return GenerateJwtToken(user);
         }
 
-        public async Task<string> RegisterAsync(RegistrationRequestDto request)
+        public async Task<string> RegisterDonatorAsync(DonatorRegistrationRequestDto request)
         {
             if (await _userRepository.GetAsync(request.Email) != null)
             {
                 throw new InvalidOperationException("User already exists.");
             }
 
-            Role? role = await _roleRepository.GetAsync(request.Role);
-            if (role == null)
-            {
-                throw new InvalidOperationException("Invalid role.");
-            }
-
-            User user = new User
+            Donator user = new Donator
             {
                 Name = request.Name,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                RoleId = role.Id,
-                Role = role
+                Role = Role.Standard
+            };
+            await _userRepository.AddAsync(user);
+            return GenerateJwtToken(user);
+        }
+
+        public async Task<string> RegisterRequesterAsync(RequesterRegistrationRequestDto request)
+        {
+            if (await _userRepository.GetAsync(request.Email) != null)
+            {
+                throw new InvalidOperationException("User already exists.");
+            }
+
+            Requester user = new Requester
+            {
+                Name = request.Name,
+                Email = request.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                Role = Role.Standard,
+                CurrentStatus = Status.Pending,
             };
             await _userRepository.AddAsync(user);
             return GenerateJwtToken(user);

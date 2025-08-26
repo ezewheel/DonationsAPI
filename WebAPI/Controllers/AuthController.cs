@@ -39,12 +39,36 @@ namespace WebAPI.Controllers
             }
         }
 
-        [HttpPost("register")]
-        public async Task<ActionResult<ResponseDto<string>>> Register(RegistrationRequestDto request)
+        [HttpPost("donator")]
+        public async Task<ActionResult<ResponseDto<string>>> Register(DonatorRegistrationRequestDto request)
         {
             try
             {
-                string token = await _authService.RegisterAsync(request);
+                string token = await _authService.RegisterDonatorAsync(request);
+                return Ok(new ResponseDto<string>
+                {
+                    Status = 200,
+                    Message = "Success",
+                    Data = token
+                });
+            }
+            catch (InvalidOperationException exception)
+            {
+                return BadRequest(new ResponseDto<string>
+                {
+                    Status = 400,
+                    Message = exception.Message,
+                    Data = null
+                });
+            }
+        }
+
+        [HttpPost("requester")]
+        public async Task<ActionResult<ResponseDto<string>>> Register(RequesterRegistrationRequestDto request)
+        {
+            try
+            {
+                string token = await _authService.RegisterRequesterAsync(request);
                 return Ok(new ResponseDto<string>
                 {
                     Status = 200,

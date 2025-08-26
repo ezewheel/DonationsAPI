@@ -21,7 +21,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserRepository<User>, UserRepository<User>>();
-builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 
 builder.Services.AddDbContext<DonationsDbContext>(options =>
     options.UseNpgsql(builder.Configuration["ConnectionStrings:DbConnectionString"]));

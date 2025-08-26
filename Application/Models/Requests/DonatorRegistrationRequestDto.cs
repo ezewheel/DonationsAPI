@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Models.Requests
 {
-    public class RegistrationRequestDto
+    public class DonatorRegistrationRequestDto
     {
         [Required]
         public string Name { get; set; } = string.Empty;
@@ -10,7 +10,5 @@ namespace Application.Models.Requests
         public string Email { get; set; } = string.Empty;
         [Required]
         public string Password { get; set; } = string.Empty;
-        [Required]
-        public string Role { get; set; } = string.Empty;
     }
 }

@@ -2,7 +2,6 @@
 {
     public class Requester : User
     {
-        public required string OrganizationName { get; set; }
-        public required Status CurrentStatus { get; set; }
+        public Status CurrentStatus { get; set; }
     }
 }

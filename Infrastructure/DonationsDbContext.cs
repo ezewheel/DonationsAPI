@@ -12,29 +12,19 @@ namespace Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            Role adminRole = new Role()
-            {
-                Id = 1,
-                Name = "admin",
-                Description = "System administrator"
-            };
-
-            User admin = new User()
+            Donator admin = new Donator()
             {
                 Id = 1,
                 Name = "admin",
                 Email = "admin",
                 Password = BCrypt.Net.BCrypt.HashPassword("admin"),
-                RoleId = adminRole.Id
+                Role = Role.Admin
             };
 
-            modelBuilder.Entity<Role>().HasData(adminRole);
-
-            modelBuilder.Entity<User>().HasData(admin);
+            modelBuilder.Entity<Donator>().HasData(admin);
 
             modelBuilder.Entity<User>()
                 .HasDiscriminator<string>("UserType")
-                .HasValue<User>("User")
                 .HasValue<Donator>("Donator")
                 .HasValue<Requester>("Requester");
 
