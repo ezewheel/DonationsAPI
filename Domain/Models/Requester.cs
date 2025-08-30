@@ -1,7 +1,9 @@
-﻿namespace Domain.Models
+﻿using Domain.Models.Enums;
+
+namespace Domain.Models
 {
     public class Requester : User
     {
-        public Status CurrentStatus { get; set; }
+        public AdmissionStatus AdmissionStatus { get; set; }
     }
 }

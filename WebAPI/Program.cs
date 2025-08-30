@@ -3,7 +3,6 @@ using Application.Interfaces;
 using Domain.Interfaces.Repositories;
 using Domain.Models;
 using Infrastructure;
-using Infrastructure.Repositories;
 using Infrastructure.Repositories.UserRepositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

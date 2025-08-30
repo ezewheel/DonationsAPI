@@ -1,6 +1,6 @@
-﻿namespace Domain.Models
+﻿namespace Domain.Models.Enums
 {
-    public enum Status
+    public enum AdmissionStatus
     {
        Pending,
        Accepted,

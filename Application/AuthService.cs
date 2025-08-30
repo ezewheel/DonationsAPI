@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Models.Requests;
 using Domain.Interfaces.Repositories;
 using Domain.Models;
+using Domain.Models.Enums;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -45,7 +46,7 @@ namespace Application
             User? user = await _userRepository.GetAsync(request.Email);
             if (user == null ||
                 !BCrypt.Net.BCrypt.Verify(request.Password, user.Password) ||
-                (user is Requester requester && requester.CurrentStatus != Status.Accepted))
+                (user is Requester requester && requester.AdmissionStatus != AdmissionStatus.Accepted))
             {
                 throw new UnauthorizedAccessException("Invalid email or password.");
             }
@@ -84,7 +85,7 @@ namespace Application
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 Role = Role.Standard,
-                CurrentStatus = Status.Pending,
+                AdmissionStatus = AdmissionStatus.Pending,
             };
             await _userRepository.AddAsync(user);
             return GenerateJwtToken(user);

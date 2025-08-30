@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository
 {
@@ -10,9 +11,26 @@ namespace Infrastructure.Repository
         {
             _dbContext = dbContext;
         }
-        public async Task AddAsync(T element)
+
+        public async Task AddAsync(T entity)
         {
-            await _dbContext.Set<T>().AddAsync(element);
+            await _dbContext.Set<T>().AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<T?> GetByIdAsync(int id)
+        {
+            return await _dbContext.Set<T>().FindAsync(id);
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await _dbContext.Set<T>().ToListAsync();
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            _dbContext.Set<T>().Update(entity);
             await _dbContext.SaveChangesAsync();
         }
     }

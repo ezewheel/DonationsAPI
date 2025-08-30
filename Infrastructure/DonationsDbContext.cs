@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Domain.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
@@ -19,6 +20,35 @@ namespace Infrastructure
                 Email = "admin",
                 Password = BCrypt.Net.BCrypt.HashPassword("admin"),
                 Role = Role.Admin
+            };
+
+            Requester GruppeSechs = new Requester()
+            {
+                Id = 2,
+                Name = "Gruppe Sechs",
+                Email = "gruppesechs@mail.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("gruppesechs"),
+                Role = Role.Standard,
+                AdmissionStatus = AdmissionStatus.Accepted
+            };
+
+            Requester Gamma = new Requester()
+            {
+                Id = 3,
+                Name = "Grupo Gamma",
+                Email = "grupogamma@mail.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("gamma"),
+                Role = Role.Standard,
+                AdmissionStatus = AdmissionStatus.Pending
+            };
+
+            Donator Gabriel = new Donator()
+            {
+                Id = 4,
+                Name = "Gabriel",
+                Email = "gabriel@mail.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("gabriel"),
+                Role = Role.Standard
             };
 
             modelBuilder.Entity<Donator>().HasData(admin);
