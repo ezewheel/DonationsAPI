@@ -11,7 +11,7 @@ API REST desarrollada en .NET (C#) para la gestión de campañas de donación de
 - API REST
 - Git
 
-## 🎯 Objetivo del proyecto
+## Objetivo del proyecto
 
 El objetivo de esta API es centralizar la lógica de negocio para la gestión de campañas de donación de sangre, permitiendo su consumo por aplicaciones frontend.
 
